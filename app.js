@@ -2,7 +2,7 @@
 
 const express = require('express'); // Para usar a as rotas
 const session = require('express-session'); // Para criar a sessão do usuário
-const bodyParser = require('body-parser'); // Para enviar os dados pro front
+const bodyParser = require('body-parser'); // Usado para receber as informações do front
 
 const app = express();
 const router = express.Router();
@@ -10,7 +10,7 @@ const port = 3000;
 
 const registeredUsers = []; // Array para armazenar os usuários cadastrados
 
-// Configuração para lidar com os dados enviados pelo formulário
+// Configuração para lidar com os dados recebidos do formulário
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
