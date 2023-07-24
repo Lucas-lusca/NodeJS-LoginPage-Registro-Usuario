@@ -1,21 +1,21 @@
 // ESTE É APENAS UM EXEMPLO PARA ESTUDOS!!!
 
-const express = require('express');
-const session = require('express-session');
-const bodyParser = require('body-parser');
+const express = require('express'); // Para usar a as rotas
+const session = require('express-session'); // Para criar a sessão do usuário
+const bodyParser = require('body-parser'); // Para enviar os dados pro front
 
 const app = express();
 const router = express.Router();
 const port = 3000;
 
-// Array para armazenar os usuários cadastrados
-const registeredUsers = [];
+const registeredUsers = []; // Array para armazenar os usuários cadastrados
 
 // Configuração para lidar com os dados enviados pelo formulário
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Configura a sessão de usuario
+// Configura a sessão de usuário
+// Basicamente armazena alguns dados no navegador de cada usuário temporariamente
 app.use(session({
   secret: 'sua-chave',
   resave: false,
@@ -31,12 +31,15 @@ router.get('/', function(req, res){
 });
 
 router.post('/', function(req, res){
-  const bodyData = req.body; // req contem as variaveis do HTML
+  const bodyData = req.body; // req contem as variáveis do HTML
+
+  // Se existir dodyData.useremail email, crie a variável user que é igual a ao userEmail recebido do bodyData
   const user = registeredUsers.find(user => user.userEmail === bodyData.useremail);
-  // Se a variavel email recebida do HTML corresponder com uma variavel no array, o codigo continua.
+  // Se a variável user criada a cima existir
   if(user){
+    // Se a variável userPassword recebida do HTML corresponder com uma variável no array, o código continua
     if(user.userPassword === bodyData.userpassword){
-      req.session.useremail = bodyData.useremail;
+      req.session.useremail = bodyData.useremail; // Salva a variável useremail na sessão de usuário
       res.redirect('/home');
     } else {
       console.log('Senha incorreta');
@@ -49,8 +52,8 @@ router.post('/', function(req, res){
 });
 
 router.get('/home', function(req, res){
-  const userEmail = req.session.useremail;
-  res.render('home', { useremail: userEmail });
+  const userEmail = req.session.useremail; // userEmail recebe o valor da variável armazenada na session do usuário
+  res.render('home', { useremail: userEmail }); // Passa o valor para o frontEnd
 });
 
 router.get('/register', function(req, res){
@@ -58,15 +61,15 @@ router.get('/register', function(req, res){
 });
 
 router.post('/register', function(req, res){
-  const { useremail, userpassword } = req.body;
+  const { useremail, userpassword } = req.body; // As variáveis recebem as informações do front
 
-  // Verifica se o usuario já esta cadastrado
+  // Verifica se o usuário já esta cadastrado
   if(registeredUsers.find(user => user.userEmail === useremail)){
     console.log('Usuário já cadastrado');
     res.redirect('/register');
   }
   else{
-    registeredUsers.push({ userEmail: useremail, userPassword: userpassword }); // Adiciona as variaveis no array
+    registeredUsers.push({ userEmail: useremail, userPassword: userpassword }); // Adiciona as variáveis no array
     res.redirect('/');
   }
 });
